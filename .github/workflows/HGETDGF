@@ -1,0 +1,85 @@
+#include<bits/stdc++.h>
+using namespace std;
+typedef long long ll;
+
+#define M 1000000007
+const int N = 4e6;
+
+int i,j,k,n,m,d,t,nmsl;
+int jc[N+50],inv[N+50];
+
+ll su(ll a,ll b){a+=b;return (a>=M)?a-M:a;}
+ll ksm(ll a,ll p){ll res=1;while(p){if(p&1){res=res*a%M;}a=a*a%M;p>>=1;}return res;}
+ll c(ll n,ll m){if(n<m||n<0||m<0){return 0;}return 1ll*jc[n]*inv[m]%M*inv[n-m]%M;}
+
+struct MIN25{
+	const static int N = 2e5;
+	ll p[N+50],n,sq,it;
+	int i,j,k;ll sb;
+	
+	void init(){
+		vector<bool>b(sq+5); it=0;
+		sb=c(nmsl+d,d);
+		for(i=2;i<=sq;i++)if(!b[i]){
+			p[++it]=i; for(j=i+i;j<=sq;j+=i)b[j]=i;
+		}
+	}
+	
+	int ls[N+50],sz;
+	ll g[N+50];
+	inline int id(int x){return (x<=sq?x:sz+1-n/x);}
+	
+	void init2(){
+		sz=0;
+		for(i=1;i<=n;i=n/j+1){
+			j=n/i; ls[++sz]=j;
+		}
+		reverse(ls+1,ls+sz+1);
+		for(i=1;i<=sz;i++){
+			g[i]=1ll*(ls[i]-1)*sb%M;
+		}
+		
+		for(i=1;i<=it;i++){
+			for(j=sz;ls[j]/p[i]>=p[i];j--){
+				ll w=(M+g[id(ls[j]/p[i])]-1ll*(i-1)*sb%M)%M;
+				g[j]=su(g[j],M-w);
+			}
+		}
+	}
+	
+	ll dfs(int n,int m){
+		if(n<p[m-1]||n<=1)return 0;
+		ll res=g[id(n)]-(m-1)*sb%M;
+		
+		int i,j,k;
+		for(i=m;i<=it&&n/p[i]>=p[i];i++){
+			for(j=1,k=p[i];k<=n;j++,k*=p[i]){
+				res+=c(nmsl*j+d,d)*(dfs(n/k,i+1)+(j>1))%M;
+				if(k>n/p[i])break;
+			}
+		}
+		res=(res%M+M)%M;
+		return res;
+	}
+	
+	int fuck(int _n){
+		n=_n; sq=__builtin_sqrtl(n);
+		init();
+		init2();
+		return dfs(n,1)+1;
+	}
+}min25;
+
+signed main(){
+	ios::sync_with_stdio(0); cin.tie(0);
+	jc[0]=inv[0]=1;
+	for(i=1;i<=N;i++)jc[i]=1ll*jc[i-1]*i%M;
+	inv[N]=ksm(jc[N],M-2);
+	for(i=N-1;i>=1;i--)inv[i]=1ll*inv[i+1]*(i+1)%M;
+	
+	cin>>t;
+	while(t--){
+		cin>>n>>nmsl>>d;
+		cout<<min25.fuck(n)<<'\n';
+	}
+}
