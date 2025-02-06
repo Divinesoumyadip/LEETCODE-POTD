@@ -1,0 +1,19 @@
+class Solution {
+public:
+    bool canJump(vector<int>& n) {
+        n[n.size() - 1] = 1; 
+        for (int i = n.size() - 2; i >= 0; i--) {
+            for (int j = i + 1; j < n.size(); j++) {
+                if (n[i] > 0 && n[j] == 1) {
+                    n[i] = 1;
+                    break; 
+                } else if (n[i] == 0) {
+                    break; 
+                } else {
+                    n[i]--; 
+                }
+            }
+        }
+        return n[0]; 
+    }
+};
