@@ -1,0 +1,51 @@
+class Solution {
+public:
+    void createAns(stack<string> &s, string &ans) {
+        if (s.empty()) {
+            return ;
+        }
+
+        string temp = s.top();
+        s.pop();
+        createAns(s, ans);
+        ans += temp;
+
+        return ;
+    }
+
+    string simplifyPath(string path) {
+        int n = path.size();
+        stack<string> s;
+        int index = 0;
+    
+        while(index < n) {
+            int start = index;
+            int end = index + 1;
+
+            string directory = "/";
+            while(end < n && path[end] != '/') {
+                directory += + path[end++];
+            }
+            index = end;
+
+            if (directory == "/." || directory == "/") {
+                continue;
+            }
+
+            if (directory != "/..") {
+                s.push(directory);
+            }
+            else if (!s.empty()) {
+                s.pop();
+            }
+        }
+
+        if (s.empty()) {
+            return "/";
+        }
+        
+        string ans = "";
+        createAns(s, ans);
+        return ans;
+    }
+};
