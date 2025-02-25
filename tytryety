@@ -1,0 +1,49 @@
+#include<cstdio>
+#include<cstring>
+#include<algorithm>
+using namespace std;
+const int md=1e9+7;
+int n,k,l,t,ans;
+long long m;
+inline int qmod(int x)
+{
+	return x+(x>>31&md);
+}
+int rev(int x,int y)
+{
+	int an4=0;
+	while(x)
+	{
+		an4=(1ll*an4*y+x%y)%md;
+		x/=y;
+	}
+	return an4;
+}
+inline int sm(int x)
+{
+	return (x*2ll+1)*(x+1)*x/6%md;
+}
+void solve()
+{
+	ans=0;
+	scanf("%d%lld",&n,&m);
+	for(int i=2;i<=m&&1ll*i*i<=n;++i) ans=qmod(ans+rev(n,i)-md);
+	for(int i=1,j;i<=m&&i<=n;i=j+1)
+	{
+		j=n/(n/i);
+		if(1ll*i*i<=n) continue;
+		j=min((long long)j,m);
+		//printf("[%d,%d]\n",i,j);
+		ans=(ans+(j-i+1ll)*(n/i))%md;
+		ans=(ans+(i+j)*(j-i+1ll)/2*n)%md;
+		ans=qmod(ans-1ll*qmod(sm(j)-sm(i-1))*(n/i)%md);
+	}
+	if(n<m) ans=(ans+1ll*qmod(m%md-n)*n)%md;
+	printf("%d\n",ans);
+}
+int main()
+{
+	scanf("%d",&t);
+	while(t--) solve();
+	return 0;
+}
