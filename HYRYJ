@@ -1,0 +1,29 @@
+#include<bits/stdc++.h>
+using namespace std;
+int t,n,a[26],b[26],ans;
+string s;
+int main(){
+	scanf("%d\n",&t);
+	while(t--){
+		cin>>s;
+		n=s.size();
+		memset(a,0,sizeof(a));
+		ans=2147483647;
+		for(int i=0;i<n;i++)a[s[i]-'a']++;
+		for(int x=0;x<2;x++){
+			memset(b,0,sizeof(b));
+			for(int i=0,j=n-1;i<n;i++){
+				++b[s[i]-'a'];
+				if((i<n/2&&2*b[s[i]-'a']>a[s[i]-'a'])||(i>=n/2&&s[i]!=s[n-i-1]))break;
+				while(j>=n-i-1&&j>i&&s[j]==s[n-j-1]){
+					--j;
+				}
+				j=max(j,i);
+				ans=min(ans,j-i);
+			}
+			reverse(s.begin(),s.end());
+		}
+
+		printf("%d\n",ans);
+	}
+}
