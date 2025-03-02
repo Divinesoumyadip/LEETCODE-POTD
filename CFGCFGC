@@ -1,0 +1,7 @@
+#include<iostream>
+using namespace std;
+using L=long long;
+L g,a,b,c,x,y;
+void f(L a,L b,L&x,L&y){b?f(b,a%b,y,x),y-=a/b*x:(x=1,y=0,g=a);}
+main(){cin>>a>>b>>c,f(a,b,x,y),c%g?cout<<-1:cout<<-c/g*x<<' '<<-c/g*y;}
+
